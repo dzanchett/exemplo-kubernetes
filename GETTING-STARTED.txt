@@ -1,0 +1,97 @@
+╔════════════════════════════════════════════════════════════════════════╗
+║                                                                        ║
+║     🚀 DEMO KUBERNETES COM MINIKUBE - GUIA DE INÍCIO RÁPIDO 🚀        ║
+║                                                                        ║
+║            Laravel APIs + Angular Frontend + Kubernetes               ║
+║                                                                        ║
+╚════════════════════════════════════════════════════════════════════════╝
+
+📋 PRÉ-REQUISITOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Você precisa ter instalado no seu Mac:
+
+  ✓ Docker Desktop       →  brew install --cask docker
+  ✓ Minikube            →  brew install minikube
+  ✓ kubectl             →  brew install kubectl
+
+Não tem instalado? Veja: INSTALLATION.md
+
+
+🚀 INÍCIO RÁPIDO (5 MINUTOS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1️⃣  Execute o setup:
+
+    cd scripts
+    ./setup.sh
+
+2️⃣  Configure o /etc/hosts:
+
+    MINIKUBE_IP=$(minikube ip)
+    sudo bash -c "echo \"$MINIKUBE_IP demo.local\" >> /etc/hosts"
+    sudo bash -c "echo \"$MINIKUBE_IP users-api.local\" >> /etc/hosts"
+    sudo bash -c "echo \"$MINIKUBE_IP products-api.local\" >> /etc/hosts"
+
+3️⃣  Acesse no navegador:
+
+    http://demo.local
+
+
+🌐 URLs DISPONÍVEIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Frontend:       http://demo.local
+  Users API:      http://users-api.local/api/users
+  Products API:   http://products-api.local/api/products
+
+
+🛠️  COMANDOS ÚTEIS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ./scripts/status.sh      →  Ver status do cluster
+  ./scripts/logs.sh        →  Ver logs das aplicações
+  ./scripts/test-apis.sh   →  Testar APIs
+  ./scripts/rebuild.sh     →  Reconstruir após mudanças
+  ./scripts/cleanup.sh     →  Limpar tudo
+
+
+📚 DOCUMENTAÇÃO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  README.md           →  Documentação completa
+  QUICKSTART.md       →  Guia rápido detalhado
+  INSTALLATION.md     →  Instalação passo a passo
+  ARCHITECTURE.md     →  Arquitetura técnica
+  DEMO-GUIDE.md       →  Roteiro para aula
+  PROJECT-SUMMARY.md  →  Resumo completo do projeto
+
+
+❓ PROBLEMAS?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  • Pods não iniciam?
+    kubectl get pods
+    kubectl describe pod <pod-name>
+
+  • URL não funciona?
+    cat /etc/hosts | grep ".local"
+    minikube ip
+
+  • Minikube com problema?
+    minikube delete
+    minikube start
+
+
+🎓 BOA AULA!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Este projeto demonstra:
+  ✓ Containerização com Docker
+  ✓ Orquestração com Kubernetes
+  ✓ Microserviços (Laravel + Angular)
+  ✓ DevOps e Automação
+
+Para mais informações, consulte os arquivos de documentação.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
