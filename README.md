@@ -5,48 +5,71 @@
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 
-## ?? Sobre o Projeto
+## 📖 Sobre o Projeto
 
-Este ? um projeto de demonstra??o educacional que implementa uma arquitetura de microservi?os usando Kubernetes local com Minikube. O projeto consiste em:
+Este é um projeto de demonstração educacional que implementa uma arquitetura de microserviços usando Kubernetes local com Minikube. O projeto consiste em:
 
 - **2 APIs Backend** implementadas em PHP com Laravel
-  - API de Usu?rios
+  - API de Usuários
   - API de Produtos
 - **1 Frontend** implementado com Angular
-- **Orquestra??o** com Kubernetes (Minikube)
-- **Containeriza??o** com Docker
+- **🛡️ WAF (Web Application Firewall)** usando BunkerWeb
+- **Orquestração** com Kubernetes (Minikube)
+- **Containerização** com Docker
 
-## ?? Objetivo
+## 🎯 Objetivo
 
-Demonstrar na pr?tica os conceitos de:
-- Containeriza??o de aplica??es
-- Orquestra??o de containers com Kubernetes
-- Microservi?os
+Demonstrar na prática os conceitos de:
+- Containerização de aplicações
+- Orquestração de containers com Kubernetes
+- Microserviços
 - Service Discovery
 - Ingress e roteamento
 - Health Checks e Probes
 - Escalabilidade horizontal
+- 🛡️ **Segurança com WAF (Web Application Firewall)**
+- 🔒 **Proteção contra ataques web (OWASP Top 10)**
 
-## ??? Arquitetura
+## 🏗️ Arquitetura
+
+### Com WAF (BunkerWeb) - Arquitetura Segura
 
 ```
-???????????????????????????????????????????????????????????????
-?                         Ingress                              ?
-?                  (nginx-ingress-controller)                  ?
-???????????????????????????????????????????????????????????????
-             ?                ?                ?
-             ?                ?                ?
-        ????????????    ????????????    ????????????
-        ? Frontend ?    ? Users    ?    ? Products ?
-        ? Service  ?    ? API      ?    ? API      ?
-        ?          ?    ? Service  ?    ? Service  ?
-        ????????????    ????????????    ????????????
-             ?                ?                ?
-        ????????????    ????????????    ????????????
-        ? Frontend ?    ? Users    ?    ? Products ?
-        ? Pod      ?    ? API Pod  ?    ? API Pod  ?
-        ? (x2)     ?    ? (x2)     ?    ? (x2)     ?
-        ????????????    ????????????    ????????????
+┌─────────────────────────────────────────────────────────┐
+│                      Internet                            │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│                  Ingress Controller                      │
+│              (nginx-ingress-controller)                  │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│              🛡️  BunkerWeb WAF                          │
+│         (Web Application Firewall)                       │
+│  ✅ SQL Injection Protection                            │
+│  ✅ XSS Protection                                      │
+│  ✅ Rate Limiting                                       │
+│  ✅ Bot Detection                                       │
+│  ✅ OWASP CRS                                          │
+└──────┬─────────────────┬─────────────────┬──────────────┘
+       │                 │                 │
+       ▼                 ▼                 ▼
+  ┌─────────┐      ┌─────────┐      ┌─────────┐
+  │Frontend │      │ Users   │      │Products │
+  │Service  │      │ API     │      │ API     │
+  │         │      │ Service │      │ Service │
+  └────┬────┘      └────┬────┘      └────┬────┘
+       │                │                 │
+       ▼                ▼                 ▼
+  ┌─────────┐      ┌─────────┐      ┌─────────┐
+  │Frontend │      │ Users   │      │Products │
+  │ Pods    │      │ API     │      │ API     │
+  │ (x2)    │      │ Pods    │      │ Pods    │
+  │         │      │ (x2)    │      │ (x2)    │
+  └─────────┘      └─────────┘      └─────────┘
 ```
 
 ## ??? Tecnologias Utilizadas
@@ -63,11 +86,14 @@ Demonstrar na pr?tica os conceitos de:
 - **RxJS**
 - **Nginx**
 
-### DevOps
-- **Docker** - Containeriza??o
-- **Kubernetes** - Orquestra??o
+### DevOps & Security
+- **Docker** - Containerização
+- **Kubernetes** - Orquestração
 - **Minikube** - Cluster local
 - **kubectl** - CLI do Kubernetes
+- **🛡️ BunkerWeb** - Web Application Firewall (WAF)
+- **ModSecurity** - WAF Engine
+- **OWASP CRS** - Core Rule Set
 
 ## ?? Pr?-requisitos
 
@@ -143,18 +169,38 @@ sudo bash -c "echo \"$MINIKUBE_IP products-api.local\" >> /etc/hosts"
 - **Users API**: [http://users-api.local/api/users](http://users-api.local/api/users)
 - **Products API**: [http://products-api.local/api/products](http://products-api.local/api/products)
 
-## ??? Scripts Dispon?veis
+### 5. Testar o WAF (Web Application Firewall)
 
-Todos os scripts est?o na pasta `scripts/`:
+```bash
+# Teste básico do WAF
+./scripts/test-waf.sh
 
-| Script | Descri??o |
+# Simulação avançada de ataques
+./scripts/attack-simulation.sh
+
+# Gerenciar o WAF
+./scripts/waf-manage.sh
+```
+
+**📚 Para mais informações sobre o WAF:**
+- [WAF Quick Start](WAF-QUICKSTART.md)
+- [Guia Completo do WAF](WAF-GUIDE.md)
+
+## 🛠️ Scripts Disponíveis
+
+Todos os scripts estão na pasta `scripts/`:
+
+| Script | Descrição |
 |--------|-----------|
 | `setup.sh` | Configura todo o ambiente do zero |
 | `status.sh` | Exibe o status completo do cluster |
-| `logs.sh` | Visualiza logs das aplica??es |
-| `rebuild.sh` | Reconstr?i imagens e atualiza deployments |
+| `logs.sh` | Visualiza logs das aplicações |
+| `rebuild.sh` | Reconstrói imagens e atualiza deployments |
 | `test-apis.sh` | Testa todos os endpoints das APIs |
 | `cleanup.sh` | Remove todos os recursos do cluster |
+| **🛡️ `test-waf.sh`** | **Testa proteções do WAF** |
+| **🛡️ `attack-simulation.sh`** | **Simula ataques avançados** |
+| **🛡️ `waf-manage.sh`** | **Gerencia o BunkerWeb WAF** |
 
 ### Exemplos de Uso
 
@@ -175,6 +221,12 @@ Todos os scripts est?o na pasta `scripts/`:
 
 # Limpar tudo
 ./scripts/cleanup.sh
+
+# Testar WAF
+./scripts/test-waf.sh
+
+# Gerenciar WAF
+./scripts/waf-manage.sh
 ```
 
 ## ?? Estrutura do Projeto
@@ -202,23 +254,30 @@ Todos os scripts est?o na pasta `scripts/`:
 ?   ??? Dockerfile
 ?   ??? nginx.conf
 ?
-??? k8s/                    # Manifestos Kubernetes
-?   ??? namespace.yaml
-?   ??? configmap.yaml
-?   ??? users-api-deployment.yaml
-?   ??? products-api-deployment.yaml
-?   ??? frontend-deployment.yaml
-?   ??? ingress.yaml
+├── k8s/                    # Manifestos Kubernetes
+│   ├── namespace.yaml
+│   ├── configmap.yaml
+│   ├── users-api-deployment.yaml
+│   ├── products-api-deployment.yaml
+│   ├── frontend-deployment.yaml
+│   ├── bunkerweb-deployment.yaml      # 🛡️ WAF
+│   ├── ingress.yaml
+│   └── ingress-with-bunkerweb.yaml    # 🛡️ Ingress protegido
 ?
-??? scripts/                # Scripts de automa??o
-?   ??? setup.sh
-?   ??? status.sh
-?   ??? logs.sh
-?   ??? rebuild.sh
-?   ??? test-apis.sh
-?   ??? cleanup.sh
+├── scripts/                # Scripts de automação
+│   ├── setup.sh
+│   ├── status.sh
+│   ├── logs.sh
+│   ├── rebuild.sh
+│   ├── test-apis.sh
+│   ├── cleanup.sh
+│   ├── test-waf.sh             # 🛡️ Testes de segurança
+│   ├── attack-simulation.sh    # 🛡️ Simulação de ataques
+│   └── waf-manage.sh           # 🛡️ Gerenciar WAF
 ?
-??? README.md
+├── README.md
+├── WAF-GUIDE.md           # 🛡️ Guia completo do WAF
+└── WAF-QUICKSTART.md      # 🛡️ Quick start WAF
 ```
 
 ## ?? Endpoints das APIs
@@ -349,11 +408,11 @@ minikube addons enable ingress
 kubectl get pods -n ingress-nginx
 ```
 
-## ?? Conceitos Demonstrados
+## 📚 Conceitos Demonstrados
 
-### 1. Containeriza??o
+### 1. Containerização
 - Dockerfile multi-stage (frontend)
-- Otimiza??o de imagens
+- Otimização de imagens
 - .dockerignore
 
 ### 2. Kubernetes
@@ -365,7 +424,7 @@ kubectl get pods -n ingress-nginx
 - Labels e Selectors
 
 ### 3. High Availability
-- M?ltiplas r?plicas (2 por servi?o)
+- Múltiplas réplicas (2 por serviço)
 - Health checks (liveness e readiness probes)
 - Rolling updates
 
@@ -377,6 +436,19 @@ kubectl get pods -n ingress-nginx
 ### 5. Resource Management
 - Resource requests e limits
 - Pod scheduling
+
+### 6. 🛡️ Segurança Web (NEW!)
+- **Web Application Firewall (WAF)**
+- **Proteção contra OWASP Top 10**
+  - SQL Injection
+  - Cross-Site Scripting (XSS)
+  - Command Injection
+  - Path Traversal
+  - SSRF (Server-Side Request Forgery)
+- **Rate Limiting e DDoS Protection**
+- **Bot Detection**
+- **Security Headers**
+- **Logging e Auditoria**
 
 ## ?? Comandos ?teis
 

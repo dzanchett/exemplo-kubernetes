@@ -1,0 +1,161 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bunkerweb
+  labels:
+    app: bunkerweb
+    tier: security
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bunkerweb
+  template:
+    metadata:
+      labels:
+        app: bunkerweb
+        tier: security
+    spec:
+      containers:
+      - name: bunkerweb
+        image: bunkerity/bunkerweb:1.5.6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 8443
+          name: https
+        env:
+        # Configurações básicas
+        - name: SERVER_NAME
+          value: "demo.local users-api.local products-api.local"
+        - name: MULTISITE
+          value: "yes"
+        - name: LOG_LEVEL
+          value: "info"
+        
+        # Frontend (demo.local)
+        - name: demo.local_USE_REVERSE_PROXY
+          value: "yes"
+        - name: demo.local_REVERSE_PROXY_URL
+          value: "/"
+        - name: demo.local_REVERSE_PROXY_HOST
+          value: "http://frontend-service:80"
+        
+        # Users API (users-api.local)
+        - name: users-api.local_USE_REVERSE_PROXY
+          value: "yes"
+        - name: users-api.local_REVERSE_PROXY_URL
+          value: "/"
+        - name: users-api.local_REVERSE_PROXY_HOST
+          value: "http://users-api-service:80"
+        
+        # Products API (products-api.local)
+        - name: products-api.local_USE_REVERSE_PROXY
+          value: "yes"
+        - name: products-api.local_REVERSE_PROXY_URL
+          value: "/"
+        - name: products-api.local_REVERSE_PROXY_HOST
+          value: "http://products-api-service:80"
+        
+        # Proteções do WAF
+        - name: USE_MODSECURITY
+          value: "yes"
+        - name: USE_MODSECURITY_CRS
+          value: "yes"
+        - name: MODSECURITY_CRS_VERSION
+          value: "3"
+        
+        # Proteção contra bots maliciosos
+        - name: USE_BAD_BEHAVIOR
+          value: "yes"
+        - name: BAD_BEHAVIOR_STATUS_CODES
+          value: "400 401 403 404 405 429 444"
+        - name: BAD_BEHAVIOR_BAN_TIME
+          value: "86400"
+        - name: BAD_BEHAVIOR_COUNT_TIME
+          value: "60"
+        - name: BAD_BEHAVIOR_THRESHOLD
+          value: "10"
+        
+        # Proteção contra DDoS
+        - name: USE_LIMIT_REQ
+          value: "yes"
+        - name: LIMIT_REQ_RATE
+          value: "20r/s"
+        - name: LIMIT_REQ_BURST
+          value: "40"
+        
+        # Anti-bot
+        - name: USE_ANTIBOT
+          value: "cookie"
+        - name: ANTIBOT_URI
+          value: "/admin /login"
+        
+        # Whitelisting
+        - name: USE_WHITELIST
+          value: "yes"
+        - name: WHITELIST_IP
+          value: "127.0.0.0/8 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16"
+        
+        # Headers de segurança
+        - name: CUSTOM_HEADER
+          value: "X-Frame-Options: SAMEORIGIN"
+        - name: REMOVE_HEADERS
+          value: "Server X-Powered-By X-AspNet-Version"
+        
+        # CORS
+        - name: USE_CORS
+          value: "yes"
+        - name: CORS_ALLOW_ORIGIN
+          value: "*"
+        - name: CORS_ALLOW_METHODS
+          value: "GET, POST, PUT, DELETE, OPTIONS"
+        - name: CORS_ALLOW_HEADERS
+          value: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+        
+        # Desabilitar algumas regras para permitir testes educacionais
+        # (Em produção, não faça isso!)
+        - name: MODSECURITY_SEC_RULE_ENGINE
+          value: "On"
+        
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bunkerweb-service
+  labels:
+    app: bunkerweb
+spec:
+  type: ClusterIP
+  selector:
+    app: bunkerweb
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: https
+

@@ -124,16 +124,24 @@ kubectl apply -f ../k8s/frontend-deployment.yaml -n demo-k8s
 
 echo -e "${GREEN}✅ Deployments criados com sucesso!${NC}"
 
-# Aplicar Ingress
-echo -e "\n${YELLOW}🌐 Configurando Ingress...${NC}"
-kubectl apply -f ../k8s/ingress.yaml -n demo-k8s
-echo -e "${GREEN}✅ Ingress configurado${NC}"
+# Deploy do BunkerWeb WAF
+echo -e "\n${YELLOW}🛡️  Deploying BunkerWeb WAF...${NC}"
+kubectl apply -f ../k8s/bunkerweb-deployment.yaml -n demo-k8s
+echo -e "${GREEN}✅ BunkerWeb WAF deployed${NC}"
+
+# Deletar ingress antigo se existir e aplicar novo com WAF
+echo -e "\n${YELLOW}🌐 Configurando Ingress com WAF...${NC}"
+kubectl delete ingress demo-ingress -n demo-k8s 2>/dev/null || echo "Ingress antigo não existe, continuando..."
+kubectl apply -f ../k8s/ingress-with-bunkerweb.yaml -n demo-k8s
+echo -e "${GREEN}✅ Ingress configurado com proteção WAF${NC}"
 
 # Aguardar os pods ficarem prontos
 echo -e "\n${YELLOW}⏳ Aguardando pods ficarem prontos...${NC}"
 kubectl wait --for=condition=ready pod -l app=users-api -n demo-k8s --timeout=120s || true
 kubectl wait --for=condition=ready pod -l app=products-api -n demo-k8s --timeout=120s || true
 kubectl wait --for=condition=ready pod -l app=frontend -n demo-k8s --timeout=120s || true
+kubectl wait --for=condition=ready pod -l app=bunkerweb -n demo-k8s --timeout=120s || true
+echo -e "${GREEN}✅ BunkerWeb WAF está pronto!${NC}"
 
 # Configurar hosts
 echo -e "\n${YELLOW}📝 Configurando /etc/hosts...${NC}"
@@ -184,12 +192,21 @@ echo -e "${GREEN}  Frontend:      http://localhost:8080${NC}"
 echo -e "${GREEN}  Users API:     http://localhost:8081/api/health${NC}"
 echo -e "${GREEN}  Products API:  http://localhost:8082/api/health${NC}"
 
+echo -e "\n${YELLOW}🛡️  WAF (Web Application Firewall):${NC}"
+echo -e "${GREEN}✅ BunkerWeb WAF está ativo e protegendo suas aplicações!${NC}"
+echo -e "${BLUE}Para testar a proteção do WAF:${NC}"
+echo -e "  ${GREEN}./scripts/test-waf.sh${NC}          - Testes básicos de segurança"
+echo -e "  ${GREEN}./scripts/attack-simulation.sh${NC}  - Simulações avançadas de ataques"
+echo -e "${BLUE}Para ver logs do WAF:${NC}"
+echo -e "  ${GREEN}kubectl logs -l app=bunkerweb -n demo-k8s -f${NC}"
+
 echo -e "\n${YELLOW}📋 Próximos passos:${NC}"
 echo -e "1. Configure o /etc/hosts com os comandos acima (para acesso via Ingress)"
 echo -e "2. OU execute ${BLUE}./scripts/port-forward.sh${NC} para acessar via localhost"
 echo -e "3. Acesse http://demo.local no seu navegador (após configurar /etc/hosts)"
 echo -e "4. Use ${BLUE}./scripts/status.sh${NC} para verificar o status"
 echo -e "5. Use ${BLUE}./scripts/logs.sh${NC} para ver os logs"
-echo -e "6. Use ${BLUE}./scripts/cleanup.sh${NC} para limpar tudo"
+echo -e "6. ${BLUE}./scripts/test-waf.sh${NC} para testar o WAF"
+echo -e "7. Use ${BLUE}./scripts/cleanup.sh${NC} para limpar tudo"
 
 echo -e "\n${GREEN}🎓 Boa aula!${NC}\n"
