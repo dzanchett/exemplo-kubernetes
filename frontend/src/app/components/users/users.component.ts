@@ -17,24 +17,24 @@ import { ApiService, User } from '../../services/api.service';
       </div>
 
       <div class="loading" *ngIf="loading">
-        ? Carregando usu?rios...
+        ⏳ Carregando usuários...
       </div>
 
       <div class="error" *ngIf="error">
-        ? {{ error }}
+        ⚠️ {{ error }}
       </div>
 
       <div class="grid" *ngIf="!loading && !error && users.length > 0">
         <div class="card" *ngFor="let user of users">
           <h3>{{ user.name }}</h3>
-          <p>?? {{ user.email }}</p>
-          <p>?? Fun??o: {{ user.role }}</p>
+          <p>📧 {{ user.email }}</p>
+          <p>👤 Função: {{ user.role }}</p>
           <span class="badge">ID: {{ user.id }}</span>
         </div>
       </div>
 
       <div *ngIf="!loading && !error && users.length === 0">
-        <p style="text-align: center; color: #666;">Nenhum usu?rio encontrado.</p>
+        <p style="text-align: center; color: #666;">Nenhum usuário encontrado.</p>
       </div>
     </div>
   `,
@@ -59,7 +59,7 @@ export class UsersComponent implements OnInit {
         this.serviceInfo = data;
       },
       error: (err) => {
-        console.error('Erro ao carregar informa??es do servi?o:', err);
+        console.error('Erro ao carregar informações do serviço:', err);
       }
     });
   }
@@ -74,8 +74,8 @@ export class UsersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erro ao carregar usu?rios:', err);
-        this.error = 'N?o foi poss?vel carregar os usu?rios. Verifique se o servi?o est? rodando.';
+        console.error('Erro ao carregar usuários:', err);
+        this.error = 'Não foi possível carregar os usuários. Verifique se o serviço está rodando.';
         this.loading = false;
       }
     });

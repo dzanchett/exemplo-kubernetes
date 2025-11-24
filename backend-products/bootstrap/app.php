@@ -19,4 +19,6 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+// No need for manual route registration - handled by Kernel
+
 return $app;

@@ -17,18 +17,18 @@ import { ApiService, Product } from '../../services/api.service';
       </div>
 
       <div class="loading" *ngIf="loading">
-        ? Carregando produtos...
+        ⏳ Carregando produtos...
       </div>
 
       <div class="error" *ngIf="error">
-        ? {{ error }}
+        ⚠️ {{ error }}
       </div>
 
       <div class="grid" *ngIf="!loading && !error && products.length > 0">
         <div class="card" *ngFor="let product of products">
           <h3>{{ product.name }}</h3>
-          <p>??? Categoria: {{ product.category }}</p>
-          <p class="stock">?? Estoque: {{ product.stock }} unidades</p>
+          <p>🏷️ Categoria: {{ product.category }}</p>
+          <p class="stock">📊 Estoque: {{ product.stock }} unidades</p>
           <p class="price">R$ {{ product.price.toFixed(2) }}</p>
           <span class="badge">ID: {{ product.id }}</span>
         </div>
@@ -60,7 +60,7 @@ export class ProductsComponent implements OnInit {
         this.serviceInfo = data;
       },
       error: (err) => {
-        console.error('Erro ao carregar informa??es do servi?o:', err);
+        console.error('Erro ao carregar informações do serviço:', err);
       }
     });
   }
@@ -76,7 +76,7 @@ export class ProductsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao carregar produtos:', err);
-        this.error = 'N?o foi poss?vel carregar os produtos. Verifique se o servi?o est? rodando.';
+        this.error = 'Não foi possível carregar os produtos. Verifique se o serviço está rodando.';
         this.loading = false;
       }
     });

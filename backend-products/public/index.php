@@ -4,12 +4,11 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Autoloader
+// Register the auto loader
 require __DIR__.'/../vendor/autoload.php';
 
-// Bootstrap Laravel application
+// Bootstrap Laravel and handle the request
 $app = require_once __DIR__.'/../bootstrap/app.php';
-
 $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
 $response = $kernel->handle(

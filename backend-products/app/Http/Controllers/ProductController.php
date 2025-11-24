@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
@@ -49,11 +50,11 @@ class ProductController extends Controller
             ]
         ];
 
-        return response()->json([
+        return new JsonResponse([
             'success' => true,
             'data' => $products,
             'service' => 'products-api',
-            'timestamp' => now()->toIso8601String()
+            'timestamp' => date('c')
         ]);
     }
 
@@ -84,13 +85,13 @@ class ProductController extends Controller
         ];
 
         if (!isset($products[$id])) {
-            return response()->json([
+            return new JsonResponse([
                 'success' => false,
-                'message' => 'Produto n?o encontrado'
+                'message' => 'Produto não encontrado'
             ], 404);
         }
 
-        return response()->json([
+        return new JsonResponse([
             'success' => true,
             'data' => $products[$id],
             'service' => 'products-api'
@@ -102,11 +103,11 @@ class ProductController extends Controller
      */
     public function health(): JsonResponse
     {
-        return response()->json([
+        return new JsonResponse([
             'status' => 'healthy',
             'service' => 'products-api',
             'version' => '1.0.0',
-            'timestamp' => now()->toIso8601String()
+            'timestamp' => date('c')
         ]);
     }
 }

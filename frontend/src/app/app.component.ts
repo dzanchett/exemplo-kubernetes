@@ -10,20 +10,20 @@ import { ProductsComponent } from './components/products/products.component';
   template: `
     <div class="container">
       <div class="header">
-        <h1>?? Demo Kubernetes com Minikube</h1>
-        <p>Microservi?os Laravel + Angular em Cluster Local</p>
+        <h1>🚀 Demo Kubernetes com Minikube</h1>
+        <p>Microserviços Laravel + Angular em Cluster Local</p>
       </div>
 
       <div class="tabs">
         <button 
           [class.active]="activeTab === 'users'"
           (click)="activeTab = 'users'">
-          ?? Usu?rios
+          👥 Usuários
         </button>
         <button 
           [class.active]="activeTab === 'products'"
           (click)="activeTab = 'products'">
-          ?? Produtos
+          📦 Produtos
         </button>
       </div>
 
@@ -33,8 +33,8 @@ import { ProductsComponent } from './components/products/products.component';
       </div>
 
       <div class="footer">
-        <p>?? Demonstra??o de Kubernetes Local com Minikube</p>
-        <p>Backend: Laravel (PHP) | Frontend: Angular | Orquestra??o: Kubernetes</p>
+        <p>💡 Demonstração de Kubernetes Local com Minikube</p>
+        <p>Backend: Laravel (PHP) | Frontend: Angular | Orquestração: Kubernetes</p>
       </div>
     </div>
   `,

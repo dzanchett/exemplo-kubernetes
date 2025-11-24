@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -38,11 +39,11 @@ class UserController extends Controller
             ]
         ];
 
-        return response()->json([
+        return new JsonResponse([
             'success' => true,
             'data' => $users,
             'service' => 'users-api',
-            'timestamp' => now()->toIso8601String()
+            'timestamp' => date('c')
         ]);
     }
 
@@ -69,13 +70,13 @@ class UserController extends Controller
         ];
 
         if (!isset($users[$id])) {
-            return response()->json([
+            return new JsonResponse([
                 'success' => false,
-                'message' => 'Usu?rio n?o encontrado'
+                'message' => 'Usuário não encontrado'
             ], 404);
         }
 
-        return response()->json([
+        return new JsonResponse([
             'success' => true,
             'data' => $users[$id],
             'service' => 'users-api'
@@ -87,11 +88,11 @@ class UserController extends Controller
      */
     public function health(): JsonResponse
     {
-        return response()->json([
+        return new JsonResponse([
             'status' => 'healthy',
             'service' => 'users-api',
             'version' => '1.0.0',
-            'timestamp' => now()->toIso8601String()
+            'timestamp' => date('c')
         ]);
     }
 }
